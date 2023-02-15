@@ -53,7 +53,7 @@ To use assignment call It should copy `code-challenge-template` folder around as
 docker-compose up -d mysql
 ```
 
-a minute later. - because It should be runing mysql server first.
+Execute one of belows a minute later. - because It should be execute after mysql server running.
 
 ```
 docker-compose up 
