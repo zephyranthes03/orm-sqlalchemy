@@ -72,7 +72,7 @@ async def add_weathers(weather_data: List[Weather]) -> dict:
                 precipitation=weather['precipitation'], station=weather['station'])
             last_record_id = conn.execute(query)
         conn.commit()
-        return {"Total inserted record : ", count}
+        return {"Total inserted record": count}
 
 # Add a new weather into to the database
 async def add_weather(weather_data: Weather) -> dict:
