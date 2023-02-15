@@ -29,7 +29,7 @@ function : add_weathers - using restAPI for all records once.
 
 Elapsed time printed on the logs.
 
-** date file has PRIMARY KEY attribute, So it could have duplicate value on `date` field.
+** The id(station and date combination) has PRIMARY KEY attribute. So the weather table couldn't have duplicate station and date combication.
 
 
 ## Problem 3 - Data Analysis
