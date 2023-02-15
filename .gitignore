@@ -1,0 +1,4 @@
+**/code-challenge-template/**
+**/__pycache__
+mysql-data/**
+**/.DS_Store
