@@ -9,12 +9,15 @@
 ### Mysql Database : weather, Table : weather 
 
 ```
+CREATE DATABASE `weather`;
+use weather;
 CREATE TABLE weather (
-    date varchar(8) PRIMARY KEY,
-    min_temperature DECIMAL(3,1),
-    max_temperature DECIMAL(3,1),
-    precipitation DECIMAL(3,1),
-#    station varchar(32)
+    id varchar(20) PRIMARY KEY,
+    date varchar(8),
+    station varchar(11),
+    min_temperature DECIMAL(5,1),
+    max_temperature DECIMAL(5,1),
+    precipitation DECIMAL(5,1)
 );
 ```
 
@@ -45,6 +48,12 @@ To use assignment call It should copy `code-challenge-template` folder around as
 
 
 ## Extra Credit - Deployment
+
+```
+docker-compose up -d mysql
+```
+
+a minute later. - because It should be runing mysql server first.
 
 ```
 docker-compose up 

@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 class WeatherSchema(BaseModel):
     date: str = Field(...)
+    station: str = Field(...)
     max_temperature: float = Field(...)
     min_temperature: float = Field(...)
     precipitation: float = Field(...)
@@ -12,6 +13,7 @@ class WeatherSchema(BaseModel):
         schema_extra = {
             "example": {
                 "date": "19850109",
+                "station": "USC00332098",
                 "max_temperature": -11,
                 "min_temperature": -140,
                 "precipitation": 191,
@@ -21,6 +23,7 @@ class WeatherSchema(BaseModel):
 
 class UpdateWeatherModel(BaseModel):
     date: Optional[str]
+    station: Optional[str]
     max_temperature: Optional[float]
     min_temperature: Optional[float]
     precipitation: Optional[float]
@@ -29,6 +32,7 @@ class UpdateWeatherModel(BaseModel):
         schema_extra = {
             "example": {
                 "date": "19850109",
+                "station": "USC00332098",
                 "max_temperature": -11,
                 "min_temperature": -140,
                 "precipitation": 191,

@@ -3,6 +3,7 @@ from fastapi.encoders import jsonable_encoder
 
 from app.server.process.process import (
     statistic_weather,
+    statistic_weather_by_station,
     delete_weather,
     add_weather,
     add_weathers
@@ -37,6 +38,13 @@ async def add_weathers_data(weather: LocationSchema = Body(...)):
 @router.get("/", response_description="Weathers retrieved")
 async def get_weathers():
     weathers = await statistic_weather()
+    if weathers:
+        return ResponseModel(weathers, "Weathers data statistic retrieved successfully")
+    return ResponseModel(weathers, "Empty list returned")
+
+@router.get("/{id}", response_description="Weathers retrieved")
+async def get_weathers(id:str):
+    weathers = await statistic_weather_by_station(id)
     if weathers:
         return ResponseModel(weathers, "Weathers data statistic retrieved successfully")
     return ResponseModel(weathers, "Empty list returned")

@@ -5,7 +5,7 @@ from typing import List
 from app.server.database import (
     add_weather,
     add_weathers,
-    retrieve_weather,
+    retrieve_weathers_by_station,
     retrieve_weathers,
     delete_weather,
     # update_weather,
@@ -41,12 +41,12 @@ async def get_weathers():
     return ResponseModel(weathers, "Empty list returned")
 
 
-@router.get("/{id}", response_description="Weather data retrieved")
+@router.get("/{id}", response_description="Weather data retrieved by station")
 async def get_weather_data(id):
-    weather = await retrieve_weather(id)
-    if weather:
-        return ResponseModel(weather, "Weather data retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "Weather doesn't exist.")
+    weathers = await retrieve_weathers_by_station(id)
+    if weathers:
+        return ResponseModel(weathers, "Weather data retrieved successfully")
+    return ResponseModel(weathers, "Empty list returned")
 
 
 # @router.put("/{id}")

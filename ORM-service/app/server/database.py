@@ -16,20 +16,21 @@ metadata = sqlalchemy.MetaData()
 weathers = sqlalchemy.Table(
     "weather",
     metadata,
-    sqlalchemy.Column("date", sqlalchemy.String(8), primary_key=True),
-    sqlalchemy.Column("min_temperature", sqlalchemy.DECIMAL(3,1)),
-    sqlalchemy.Column("max_temperature", sqlalchemy.DECIMAL(3,1)),
-    sqlalchemy.Column("precipitation", sqlalchemy.DECIMAL(3,1)),
+    sqlalchemy.Column("id", sqlalchemy.String(19), primary_key=True),
+    sqlalchemy.Column("date", sqlalchemy.String(8)),
+    sqlalchemy.Column("station", sqlalchemy.String(11)),
+    sqlalchemy.Column("min_temperature", sqlalchemy.DECIMAL(5,1)),
+    sqlalchemy.Column("max_temperature", sqlalchemy.DECIMAL(5,1)),
+    sqlalchemy.Column("precipitation", sqlalchemy.DECIMAL(5,1)),
     # sqlalchemy.Column("date_convert", sqlalchemy.Date),
 )
 
-# engine = sqlalchemy.create_engine(
-#     DATABASE_URL, connect_args={"check_same_thread": False}
-# )
 metadata.create_all(engine)
 
 class Weather(BaseModel):
+    id: str
     date: str
+    station: str
     min_temperature: float
     max_temperature: float
     precipitation: float
@@ -44,8 +45,16 @@ class Weather(BaseModel):
 async def retrieve_weathers() -> list:
     with engine.connect() as conn:        
         query = weathers.select()
-        # print(query, flush=True)
-        # return conn.execute(query).all()
+        result_list = list()
+        for row in conn.execute(query):
+            result_list.append(list(row))
+        return result_list
+
+
+# Retrieve a weather with a matching station id
+async def retrieve_weathers_by_station(id: str): # -> dict:
+    with engine.connect() as conn:
+        query = weathers.select().where(weathers.c.station==id)
         result_list = list()
         for row in conn.execute(query):
             result_list.append(list(row))
@@ -54,38 +63,26 @@ async def retrieve_weathers() -> list:
 
 # Add a new weather into to the database
 async def add_weathers(weather_data: List[Weather]) -> dict:
-    # database = engine.connect()
     count = 0
     with engine.connect() as conn:
         for weather in weather_data:
             count += 1
-            query = weathers.insert().values(date=weather['date'], max_temperature=weather['max_temperature'],
-                min_temperature=weather['min_temperature'], precipitation=weather['precipitation'])
+            query = weathers.insert().values(id=f"{weather['station']}_{weather['date']}",date=weather['date'],
+                max_temperature=weather['max_temperature'], min_temperature=weather['min_temperature'], 
+                precipitation=weather['precipitation'], station=weather['station'])
             last_record_id = conn.execute(query)
         conn.commit()
         return {"Total inserted record : ", count}
 
 # Add a new weather into to the database
 async def add_weather(weather_data: Weather) -> dict:
-    # database = engine.connect()
     with engine.connect() as conn:        
-        query = weathers.insert().values(date=weather_data['date'], max_temperature=weather_data['max_temperature'],
-            min_temperature=weather_data['min_temperature'], precipitation=weather_data['precipitation'])
+        query = weathers.insert().values(id=f"{weather_data['station']}_{weather_data['date']}", date=weather_data['date'], 
+            max_temperature=weather_data['max_temperature'], min_temperature=weather_data['min_temperature'], 
+            precipitation=weather_data['precipitation'], station=weather_data['station'])
         last_record_id = conn.execute(query)
         conn.commit()
         return {**weather_data, "id": last_record_id}
-
-# Retrieve a weather with a matching ID
-async def retrieve_weather(id: str): # -> dict:
-    with engine.connect() as conn:
-        query = weathers.select().where(weathers.c.date==id)
-        # query = weathers.select().where(Weather.date==id)
-        print(query, flush=True)
-        # return conn.execute(query).all()
-        result_list = list()
-        for row in conn.execute(query):
-            result_list.append(list(row))
-        return result_list
 
 
 # # Update a weather with a matching ID
